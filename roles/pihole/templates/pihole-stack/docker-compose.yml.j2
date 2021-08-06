@@ -1,0 +1,46 @@
+version: "3.6"
+
+services:
+  pihole:
+    container_name: ${PIHOLE_NAME}
+    image: pihole/pihole:${PIHOLE_TAG}
+    hostname: ${C_HOST_NAME}
+    network_mode: host
+    dns:
+      - ${PIHOLE_DNS1}
+      - ${PIHOLE_DNS2}
+    environment:
+      - TZ=${C_TZ}
+    env_file:
+      - .pihole-env
+    volumes:
+      - ./volumes/pihole/etc-pihole/:/etc/pihole/
+      - ./volumes/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/
+    restart: always
+    depends_on:
+      - cloudflared
+
+  cloudflared:
+    container_name: ${CLOUDFLARED_NAME}
+    image: "crazymax/cloudflared:${CLOUDFLARED_TAG}"
+    hostname: ${CLOUDFLARED_HOSTNAME}
+    ports:
+      - ${CLOUDFLARED_PORT}:5053/udp
+      - ${CLOUDFLARED_API_PORT}:49312/tcp
+    environment:
+      - TZ=${C_TZ}
+    env_file:
+      - .cloudflared-env
+    networks:
+      pihole_net:
+        ipv4_address: ${CLOUDFLARED_IP}
+    restart: always
+
+networks:
+  pihole_net:
+    name: ${DEFAULT_NET_NAME}
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${DEFAULT_NET_IPS}.0/24

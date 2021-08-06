@@ -1,0 +1,111 @@
+---
+# tasks file for common
+
+- name: Install nessecary packages
+  become: yes
+  apt:
+    name: ['wget', 'git', 'curl', 'net-tools',  'python3-pip']
+    state: present
+
+- name: Set timezone to {{ timezone }}
+  become: yes
+  timezone:
+    name: "{{ timezone }}"
+
+- name: Generate locale {{ locale_name }}
+  become: yes
+  locale_gen:
+   name: "{{ locale_name }}"
+   state: present
+
+- name: Set locale-time to {{ locale_name }}
+  become: yes
+  command:
+    argv:
+      - localectl
+      - set-locale
+      - LC_TIME={{ locale_name }}
+
+- name: Set locale to {{ locale_name }}
+  become: yes
+  command:
+    argv:
+      - localectl
+      - set-locale
+      - LANG={{ locale_name }}
+
+- name: Copy template .profile
+  template:
+    src: .profile.j2
+    dest: /tmp/.profile
+
+- name: Fetch generated .profile
+  slurp:
+    src: /tmp/.profile
+  register: profile
+
+- name: Append to .profile
+  blockinfile:
+    backup: yes
+    block: "{{ profile['content'] | b64decode }}"
+    destfile: /home/{{ ansible_user_id }}/.profile
+    insertafter: EOF
+
+- name: Create working dir for {{ hostname }}
+  file:
+    path: /home/{{ ansible_user_id }}/.acd_{{ hostname }}
+    state: directory
+  
+
+
+- name: Set manually hostname to {{ hostname }}
+  become: yes
+  command:
+    argv:
+      - hostnamectl
+      - set-hostname
+      - "{{ hostname }}"
+
+- name: Set host icon to {{ host_icon }}
+  become: yes
+  command:
+    argv:
+      - hostnamectl
+      - set-icon-name
+      - "{{ host_icon }}"
+
+- name: Set host chassis to {{ host_chassis }}
+  become: yes
+  command:
+    argv:
+      - hostnamectl
+      - set-chassis
+      - "{{ host_chassis }}"
+
+- name: Set host deployment to {{ host_deployment }}
+  become: yes
+  command:
+    argv:
+      - hostnamectl
+      - set-deployment
+      - "{{ host_deployment }}"
+
+- name: Set host location to {{ host_location }}
+  become: yes
+  command:
+    argv:
+      - hostnamectl
+      - set-location
+      - "{{ host_location }}"
+
+- name: Fetch hostnamectl info
+  become: yes
+  command:
+    argv:
+      - hostnamectl
+  register: hostout
+
+- name: Print hostnamectl info
+  debug:
+    var: hostout.stdout_lines
+  
