@@ -1,2 +1,20 @@
 ---
 # defaults file for pihole
+
+common_hostname: testhostname
+common_timezone: Asia/Nicosia
+pihole_net_range: 100.0.0
+pihole_docker_pass: defaultpass
+pihole_docker_admin_email: defaultemail@email.com
+pihole_docker_port: 8089
+pihole_docker_local_domain: default
+pihole_docker_router_ip: 10.10.10.10
+pihole_docker_router_range: 10.10.10.0/24
+pihole_docker_proxy:
+pihole_docker_dnssec: true
+pihole_docker_dns_fqdn: true
+pihole_docker_rev_server: true
+pihole_docker_dnsmasq_listen: all
+pihole_docker_dns_bogus_priv: true
+pihole_interface: eth0
+pihole_cloudflared_port: 5053

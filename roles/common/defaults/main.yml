@@ -1,2 +1,10 @@
 ---
 # defaults file for common
+
+common_timezone: Asia/Nicosia
+common_locale: en_GB.UTF-8
+common_hostname: testhostname
+common_host_icon: network-server
+common_host_chassis: server
+common_host_deployment: development
+common_host_location: home

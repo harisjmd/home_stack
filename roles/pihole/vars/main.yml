@@ -1,2 +1,18 @@
 ---
 # vars file for pihole
+
+pihole_net_name: pihole_net
+
+pihole_container_name: pihole
+pihole_docker_img: pihole/pihole
+pihole_docker_version: v5.8.1
+
+pihole_cloudflared_container_name: cloudflared
+pihole_cloudflared_img: crazymax/cloudflared
+pihole_cloudflared_version: 2021.7.4
+pihole_cloudflared_dns: 0.0.0.0
+pihole_cloudflared_ip: 24
+pihole_cloudflared_dns_up: https://1.1.1.1/dns-query
+
+pihole_cloudflared_api_port: 49312
+pihole_cloudflared_public_dns: 1.1.1.1

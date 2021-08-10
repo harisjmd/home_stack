@@ -4,35 +4,35 @@
 - name: Install nessecary packages
   become: yes
   apt:
-    name: ['wget', 'git', 'curl', 'net-tools',  'python3-pip']
+    name: "{{ common_packages }}"
     state: present
 
-- name: Set timezone to {{ timezone }}
+- name: Set timezone to {{ common_timezone }}
   become: yes
   timezone:
-    name: "{{ timezone }}"
+    name: "{{ common_timezone }}"
 
-- name: Generate locale {{ locale_name }}
+- name: Generate locale {{ common_locale }}
   become: yes
   locale_gen:
-   name: "{{ locale_name }}"
+   name: "{{ common_locale }}"
    state: present
 
-- name: Set locale-time to {{ locale_name }}
+- name: Set locale-time to {{ common_locale }}
   become: yes
   command:
     argv:
       - localectl
       - set-locale
-      - LC_TIME={{ locale_name }}
+      - LC_TIME={{ common_locale }}
 
-- name: Set locale to {{ locale_name }}
+- name: Set locale to {{ common_locale }}
   become: yes
   command:
     argv:
       - localectl
       - set-locale
-      - LANG={{ locale_name }}
+      - LANG={{ common_locale }}
 
 - name: Copy template .profile
   template:
@@ -51,52 +51,52 @@
     destfile: /home/{{ ansible_user_id }}/.profile
     insertafter: EOF
 
-- name: Create working dir for {{ hostname }}
+- name: Create working dir for {{ common_hostname }}
   file:
-    path: /home/{{ ansible_user_id }}/.acd_{{ hostname }}
+    path: /home/{{ ansible_user_id }}/.acd_{{ common_hostname }}
     state: directory
   
 
 
-- name: Set manually hostname to {{ hostname }}
+- name: Set manually hostname to {{ common_hostname }}
   become: yes
   command:
     argv:
       - hostnamectl
       - set-hostname
-      - "{{ hostname }}"
+      - "{{ common_hostname }}"
 
-- name: Set host icon to {{ host_icon }}
+- name: Set host icon to {{ common_host_icon }}
   become: yes
   command:
     argv:
       - hostnamectl
       - set-icon-name
-      - "{{ host_icon }}"
+      - "{{ common_host_icon }}"
 
-- name: Set host chassis to {{ host_chassis }}
+- name: Set host chassis to {{ common_host_chassis }}
   become: yes
   command:
     argv:
       - hostnamectl
       - set-chassis
-      - "{{ host_chassis }}"
+      - "{{ common_host_chassis }}"
 
-- name: Set host deployment to {{ host_deployment }}
+- name: Set host deployment to {{ common_host_deployment }}
   become: yes
   command:
     argv:
       - hostnamectl
       - set-deployment
-      - "{{ host_deployment }}"
+      - "{{ common_host_deployment }}"
 
-- name: Set host location to {{ host_location }}
+- name: Set host location to {{ common_host_location }}
   become: yes
   command:
     argv:
       - hostnamectl
       - set-location
-      - "{{ host_location }}"
+      - "{{ common_host_location }}"
 
 - name: Fetch hostnamectl info
   become: yes

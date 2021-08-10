@@ -7,34 +7,21 @@
     argv:
       - docker
       - version
-  register: docker_result
-
 
 - name: Create Docker working dir for acd_pihole
   file:
     path: /home/{{ ansible_user_id }}/.acd_pihole/
     state: directory
 
-
-- name: Ensure Template directory structure exists
-  file:
-    path: '/home/{{ ansible_user_id }}/.acd_pihole/{{ item.path }}'
-    state: directory
-  with_filetree: '{{ templates_source }}'
-  when: item.state == 'directory'
-
-
-- name: Copy pihole-stack from templates
+- name: Copy pihole-stack compose file
   template:
-    src: "{{ item.src }}"
-    dest: "/home/{{ ansible_user_id }}/.acd_pihole/{{ item.path.split('.j2') | first }}"
-  with_filetree: '{{ templates_source }}'
-  when: item.state == 'file'
+    src: /temlates/docker-compose.yml.j2
+    dest: "/home/{{ ansible_user_id }}/.acd_pihole/docker-compose.yml"
 
 - name: Deploy pihole-stack
   become: yes
   command:
-    chdir: /home/{{ ansible_user_id }}/.acd_pihole/pihole-stack/
+    chdir: /home/{{ ansible_user_id }}/.acd_pihole/
     argv:
       - docker-compose
       - up

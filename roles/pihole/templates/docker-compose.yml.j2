@@ -1,0 +1,60 @@
+version: "3.6"
+
+services:
+  {{ pihole_container_name }}:
+    container_name: {{ pihole_container_name }}
+    image: {{pihole_docker_img}}:{{pihole_docker_version}}
+    hostname: {{common_hostname}}
+    network_mode: host
+    environment:
+      - TZ={{common_timezone}}
+      - PIHOLE_DNS_='127.0.0.1#{{pihole_cloudflared_port}};{{pihole_cloudflared_public_dns}}'
+      - VIRTUAL_PORT={{pihole_docker_port}}
+      - WEB_PORT={{pihole_docker_port}}
+      - INTERFACE={{pihole_interface}}
+      - PROXY_LOCATION={{pihole_docker_proxy}}
+      - DNSSEC={{pihole_docker_dnssec}}
+      - DNS_FQDN_REQUIRED={{pihole_docker_dns_fqdn}}
+      - REV_SERVER={{pihole_docker_rev_server}}
+      - DNSMASQ_LISTENING={{pihole_docker_dnsmasq_listen}}
+      - VIRTUAL_HOST={{common_hostname}}
+      - DNS_BOGUS_PRIV={{pihole_docker_dns_bogus_priv}}
+      - WEBPASSWORD={{pihole_docker_pass}}
+      - ADMIN_EMAIL={{pihole_docker_admin_email}}
+      - REV_SERVER_DOMAIN={{pihole_docker_local_domain}}
+      - REV_SERVER_TARGET={{pihole_docker_router_ip}}
+      - REV_SERVER_CIDR={{pihole_docker_router_range}}
+      - WEBUIBOXEDLAYOUT=boxed
+      - IPv6=false
+      - TEMPERATUREUNIT=c
+    volumes:
+      - ./volumes/pihole/etc-pihole/:/etc/pihole/
+      - ./volumes/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/
+    restart: always
+    depends_on:
+      - {{pihole_cloudflared_container_name}}
+
+  {{pihole_cloudflared_container_name}}:
+    container_name: {{pihole_cloudflared_container_name}}
+    image: "{{pihole_cloudflared_img}}:{{pihole_cloudflared_version}}"
+    hostname: {{pihole_cloudflared_container_name}}
+    ports:
+      - {{pihole_cloudflared_port}}:{{pihole_cloudflared_port}}/udp
+      - {{pihole_cloudflared_api_port}}:{{pihole_cloudflared_api_port}}/tcp
+    environment:
+      - TZ={{common_timezone}}
+      - TUNNEL_DNS_ADDRESS={{pihole_cloudflared_dns}}
+      - TUNNEL_DNS_UPSTREAM={{pihole_cloudflared_dns}}
+    networks:
+      {{pihole_net_name}}:
+        ipv4_address: {{pihole_net_range}}.{{pihole_cloudflared_ip}}
+    restart: always
+
+networks:
+  {{pihole_net_name}}:
+    name: {{pihole_net_name}}
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: {{pihole_net_range}}.0/24
