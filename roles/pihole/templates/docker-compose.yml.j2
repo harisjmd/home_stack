@@ -8,7 +8,7 @@ services:
     network_mode: host
     environment:
       - TZ={{common_timezone}}
-      - PIHOLE_DNS_='127.0.0.1#{{pihole_cloudflared_port}};{{pihole_cloudflared_public_dns}}'
+      - PIHOLE_DNS_=127.0.0.1#{{pihole_cloudflared_port}};{{pihole_cloudflared_public_dns}}
       - VIRTUAL_PORT={{pihole_docker_port}}
       - WEB_PORT={{pihole_docker_port}}
       - INTERFACE={{pihole_interface}}
