@@ -1,4 +1,4 @@
-Role Name
+Pihole
 =========
 
 A brief description of the role goes here.
