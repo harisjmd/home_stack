@@ -1,0 +1,10 @@
+---
+# vars file for docker-install
+
+docker_apt_key: https://download.docker.com/linux/ubuntu/gpg
+docker_dep_packages:
+  - curl
+  - apt-transport-https
+  - ca-certificates
+  - software-properties-common
+  - python3-pip
