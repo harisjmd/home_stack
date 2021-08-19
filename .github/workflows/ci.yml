@@ -1,4 +1,4 @@
-name: Release
+name: CI
 
 on:
   push:
@@ -8,12 +8,20 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     container: ckozis/ansible-dev-container:latest
    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+      
+      - name: Install Python 3.8.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      
+      - name: Install Ansible.
+        run: pip3 install 'ansible-base=2.10.13'
+
       - name: Build collection
         run: ansible-galaxy collection build
