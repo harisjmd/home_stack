@@ -9,7 +9,7 @@
 
 - name: Set timezone to {{ common_timezone }}
   become: yes
-  timezone:
+  community.general.timezone:
     name: "{{ common_timezone }}"
 
 - name: Generate locale {{ common_locale }}

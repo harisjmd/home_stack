@@ -1,6 +1,7 @@
 FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y software-properties-common git curl  && apt-add-repository -y ppa:ansible/ansible && apt-get update && apt-get install -y ansible
+RUN apt-get update && apt-get install -y software-properties-common git curl python3-pip  && apt-add-repository -y ppa:ansible/ansible && apt-get update
+RUN pip3 install ansible-base
 RUN ansible --version
 CMD [ "sleep", "infinity" ]
