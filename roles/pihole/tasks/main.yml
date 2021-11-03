@@ -7,16 +7,22 @@
     argv:
       - docker
       - version
+  register: docker_exists
+  changed_when: docker_exists.rc != 0
 
 - name: Create Docker working dir for acd_pihole
   file:
     path: /home/{{ ansible_user_id }}/.acd_pihole/
     state: directory
+    mode: 0764
+  when: docker_exists is success
 
 - name: Copy pihole-stack compose file
   template:
     src: docker-compose.yml.j2
     dest: "/home/{{ ansible_user_id }}/.acd_pihole/docker-compose.yml"
+    mode: 0764
+  when: docker_exists is success
 
 - name: Deploy pihole-stack
   become: yes
@@ -26,3 +32,4 @@
       - docker-compose
       - up
       - -d
+  when: docker_exists is success

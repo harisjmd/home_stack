@@ -34,18 +34,21 @@
   file:
     path: /home/{{ ansible_user_id }}/.acd_docker_install
     state: directory
-    mode: 0644
+    mode: 0764
 
 - name: Download Docker installer script
   uri:
     url: https://get.docker.com
     dest: /home/{{ ansible_user_id }}/.acd_docker_install/get-docker.sh
+    status_code:
+      - 200
+      - 304
   when: docker_exists is failed
 
-- name: Download Docker installer script
+- name: Execute Docker installer script
   become: yes
   command:
-    argvs:
+    argv:
       - sh
       - /home/{{ ansible_user_id }}/.acd_docker_install/get-docker.sh
   when: docker_exists is failed
@@ -54,6 +57,14 @@
   become: yes
   pip:
     name: docker-compose
+
+- name: Add user {{ ansible_user_id }} to docker group
+  become: true
+  user:
+    name: "{{ ansible_user_id }}"
+    groups: 
+      - docker
+    append: true
 
 - name: Verify Docker installation
   become: yes
@@ -70,3 +81,4 @@
   debug:
     var: docker_verify.stdout_lines
   when: docker_exists is failed
+

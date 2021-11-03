@@ -38,7 +38,7 @@
   template:
     src: .profile.j2
     dest: /tmp/.profile
-    mode: 0644
+    mode: 0744
 
 - name: Fetch generated .profile
   slurp:
@@ -56,6 +56,7 @@
   file:
     path: /home/{{ ansible_user_id }}/.acd_{{ common_hostname }}
     state: directory
+    mode: 0764
   
 
 
@@ -105,6 +106,7 @@
     argv:
       - hostnamectl
   register: hostout
+  changed_when: hostout.rc != 0
 
 - name: Print hostnamectl info
   debug:
