@@ -38,6 +38,7 @@
   template:
     src: .profile.j2
     dest: /tmp/.profile
+    mode: 0644
 
 - name: Fetch generated .profile
   slurp:

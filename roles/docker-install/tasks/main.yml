@@ -14,6 +14,8 @@
       - docker
       - version
   register: docker_exists
+  changed_when: docker_exists.rc != 0
+  ignore_errors: true
 
 - name: Show that docker already exists
   debug:
@@ -32,6 +34,7 @@
   file:
     path: /home/{{ ansible_user_id }}/.acd_docker_install
     state: directory
+    mode: 0644
 
 - name: Download Docker installer script
   uri:
