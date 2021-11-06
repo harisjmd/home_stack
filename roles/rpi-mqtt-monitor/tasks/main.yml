@@ -1,0 +1,62 @@
+---
+# tasks file for rpi-mqtt-monitor
+
+- name: Install required packages
+  become: yes
+  apt:
+    name: "{{ required_packages }}"
+    state: present
+
+- name: Create rpi-mqtt-monitor working dir for acd_rpi-mqtt-monitor
+  file:
+    path: /home/{{ ansible_user_id }}/.acd_rpi-mqtt-monitor/
+    state: directory
+    mode: 0764
+
+- name: Clone repository RPi-Reporter-MQTT2HA-Daemon
+  ansible.builtin.git:
+    repo: "{{ repo_url }}"
+    dest: /home/{{ ansible_user_id }}/.acd_rpi-mqtt-monitor/
+
+- name: Copy config.ini file
+  template:
+    src: config.ini.j2
+    dest: /home/{{ ansible_user_id }}/.acd_rpi-mqtt-monitor/config.ini
+    mode: 0764
+
+- name: Copy service file
+  become: yes
+  template:
+    src: isp-rpi-reporter.service.j2
+    dest: /etc/systemd/system/isp-rpi-reporter.service
+    mode: 0664
+
+- name: Install repo pip3 requirements
+  ansible.builtin.pip:
+    requirements: requirements.txt
+    chdir: /home/{{ ansible_user_id }}/.acd_rpi-mqtt-monitor/
+
+- name: Add user daemon to video group
+  become: true
+  user:
+    name: daemon
+    groups: 
+      - video
+    append: true
+
+- name: Change ownership of .acd_rpi-mqtt-monitor to daemon
+  become: yes
+  ansible.builtin.file:
+    path: /home/{{ ansible_user_id }}/.acd_rpi-mqtt-monitor/
+    owner: daemon
+    group: daemon
+    mode: 0744
+
+- name: Install isp-rpi-reporter as a service started and enabled on boot
+  become: yes
+  ansible.builtin.systemd:
+    name: isp-rpi-reporter
+    daemon_reload: yes
+    state: started
+    enabled: true
+    

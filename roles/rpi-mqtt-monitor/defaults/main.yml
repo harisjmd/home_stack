@@ -1,0 +1,9 @@
+---
+# defaults file for rpi-mqtt-monitor
+
+update_interval_min: 5
+mqtt_host: localhost
+mqtt_port: 1883
+topic_prefix: homeassistant
+mqtt_username: user
+mqtt_password: pass
