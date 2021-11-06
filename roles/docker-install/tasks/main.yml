@@ -69,7 +69,7 @@
 - name: Verify Docker installation
   become: yes
   command:
-    argvs:
+    argv:
       - docker
       - run
       - hello-world

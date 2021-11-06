@@ -10,9 +10,10 @@
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"vscoss.vscode-ansible",
+		"redhat.ansible",
 		"redhat.vscode-yaml",
 		"ms-vscode.azurecli",
+		"ms-python.python",
 		"ms-azuretools.vscode-docker"
 	],
 
