@@ -1,0 +1,11 @@
+---
+# defaults file for raspberrypi-config
+
+enable_ssh: 0 # Default enabled
+enable_vnc: 1 # Default disabled
+enable_overscan: 1 # Default enabled
+enable_camera: 1 # Default disabled
+enable_wifi: false # Default disabled
+enable_network_boot_wait: 0 # Default enabled
+expand_rootfs: false # default disabled
+raspi_reboot_timeout: 180

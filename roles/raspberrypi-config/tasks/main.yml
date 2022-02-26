@@ -1,0 +1,91 @@
+---
+# tasks file for raspberrypi-config
+
+- name: Set GPU memmory
+  become: yes
+  ansible.builtin.command:
+    argv:
+      - raspi-config
+      - nonint
+      - do_memory_split
+      - "{{gpu_mem}}"
+
+- name: Enable/Disable SSH
+  become: yes
+  ansible.builtin.command:
+    argv:
+      - raspi-config
+      - nonint
+      - do_ssh
+      - "{{enable_ssh}}"
+
+- name: Enable/Disable VNC
+  become: yes
+  ansible.builtin.command:
+    argv:
+      - raspi-config
+      - nonint
+      - do_vnc
+      - "{{enable_vnc}}"
+
+- name: Enable/Disable Overscan
+  become: yes
+  ansible.builtin.command:
+    argv:
+      - raspi-config
+      - nonint
+      - do_overscan
+      - "{{enable_overscan}}"
+
+- name: Enable/Disable Camera
+  become: yes
+  ansible.builtin.command:
+    argv:
+      - raspi-config
+      - nonint
+      - do_camera
+      - "{{enable_camera}}"
+
+- name: Enable/Disable Wait network on Boot
+  become: yes
+  ansible.builtin.command:
+    argv:
+      - raspi-config
+      - nonint
+      - do_boot_wait
+      - "{{enable_network_boot_wait}}"
+
+- name: Enable and Configure Wifi
+  become: yes
+  ansible.builtin.command:
+    argv:
+      - raspi-config
+      - nonint
+      - do_wifi_ssid_passphrase
+      - "{{wifi_ssid}}"
+      - "{{wifi_pass}}"
+  when: enable_wifi == true and wifi_ssid is defined and wifi_pass is defined
+
+- name: Set Wifi Country
+  become: yes
+  ansible.builtin.command:
+    argv:
+      - raspi-config
+      - nonint
+      - do_wifi_country
+      - "{{wifi_country}}"
+  when: enable_wifi == true and wifi_country is defined
+
+- name: Expand ROOT filesystem
+  become: yes
+  ansible.builtin.command:
+    argv:
+      - raspi-config
+      - nonint
+      - do_expand_rootfs
+  when: expand_rootfs == true
+
+- name: Reboot Raspberry pi
+  become: yes
+  ansible.builtin.reboot:
+    reboot_timeout: "{{raspi_reboot_timeout}}"

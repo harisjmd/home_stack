@@ -1,0 +1,8 @@
+---
+# vars file for raspberrypi-config
+
+gpu_mem: 128
+wifi_country: UK
+boot_behavior: B2 # autologin console
+wifi_ssid: default
+wifi_pass: default123
