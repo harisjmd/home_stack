@@ -1,7 +1,7 @@
-Role Name
+raspberrypi-config
 =========
 
-A brief description of the role goes here.
+Uses **raspbi-config** tool of raspbian to make changes to the configuration of the Raspberry Pi
 
 Requirements
 ------------

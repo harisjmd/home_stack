@@ -44,6 +44,7 @@
   slurp:
     src: /tmp/.profile
   register: profile
+  when: not ansible_check_mode
 
 - name: Append to .profile
   blockinfile:
